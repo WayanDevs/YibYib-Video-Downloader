@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yibyib Video Downloader</title>
+  </head>
+  <body class="bg-[#090d16] text-slate-100 font-sans h-screen flex overflow-hidden selection:bg-blue-600 selection:text-white">
+
+    <!-- Global Layout Wrapper -->
+    <div id="app-root" class="w-full h-full flex relative">
+
+      <!-- Background Glow Orbs -->
+      <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/5 rounded-full filter blur-[120px] pointer-events-none animate-pulse-slow"></div>
+      <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-emerald-600/5 rounded-full filter blur-[100px] pointer-events-none animate-pulse-slow"></div>
+
+      <!-- Left Sidebar -->
+      <aside class="w-64 bg-[#0c1222] border-r border-slate-800/80 flex flex-col z-20">
+        
+        <!-- Logo Header -->
+        <div class="p-6 border-b border-slate-800/60 flex flex-col gap-1">
+          <h1 class="font-extrabold text-sm tracking-tight text-white">Yibyib Video Downloader</h1>
+          <p class="text-[10px] text-slate-400 font-mono tracking-wider">v1.0.0</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex-1 px-4 py-6 space-y-1.5">
+          <button id="tab-unduh" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 bg-blue-600 text-white shadow-md cursor-pointer">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Unduh Media</span>
+          </button>
+
+          <button id="tab-antrean" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>Antrean Unduh</span>
+            <span id="queue-badge" class="ml-auto bg-blue-500/10 text-blue-400 border border-blue-500/10 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+          </button>
+          
+          <button id="tab-riwayat" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span>Riwayat Selesai</span>
+            <span id="riwayat-badge" class="ml-auto bg-slate-800 text-[10px] px-2 py-0.5 rounded-full font-bold text-slate-300">0</span>
+          </button>
+
+          <button id="tab-convert" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+            <span>Konverter Audio</span>
+            <span id="convert-badge" class="ml-auto bg-blue-500/10 text-blue-400 border border-blue-500/10 text-[10px] px-2 py-0.5 rounded-full font-bold hidden">0</span>
+          </button>
+
+          <button id="tab-logs" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>CLI Terminal Logs</span>
+            <span id="logs-badge" class="ml-auto bg-amber-500/10 text-amber-500 text-[10px] px-2 py-0.5 rounded-full font-bold border border-amber-500/10 animate-pulse hidden">LIVE</span>
+          </button>
+
+          <button id="tab-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Pengaturan</span>
+          </button>
+        </nav>
+
+        <!-- Lokasi & Konkurensi Info -->
+        <div class="p-4 mx-4 mb-0 mt-2 bg-slate-900/40 rounded-2xl border border-slate-800/40 space-y-2.5">
+          <div class="space-y-1">
+            <span class="text-[9px] text-slate-500 block font-mono font-bold uppercase tracking-wider">Lokasi Default</span>
+            <span class="text-xs text-slate-300 font-mono break-all font-bold">/Downloads/YibYib_Media</span>
+          </div>
+          <div class="space-y-1">
+            <span class="text-[9px] text-slate-500 block font-mono font-bold uppercase tracking-wider">Konkurensi</span>
+            <span class="flex items-center gap-1.5 text-xs text-blue-400 font-bold font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+              2 Batch Aktif
+            </span>
+          </div>
+        </div>
+
+        <!-- Tauri System Engine Checks -->
+        <div class="p-4 m-4 bg-slate-900/60 rounded-2xl border border-slate-800/60 space-y-3">
+          <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest font-mono">Tauri Backend Status</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">yt-dlp Engine</span>
+              <span class="flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                v2026.04
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">ffmpeg Shared</span>
+              <span class="flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                v6.1-Shared
+              </span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Container Content -->
+      <main class="flex-1 flex flex-col overflow-hidden relative">
+
+        <!-- Header Panel bar -->
+        <header class="h-16 border-b border-slate-800/60 flex items-center justify-between px-8 bg-[#090d16]/80 backdrop-blur z-10">
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-400 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253"/></svg>
+              Lokasi Default: <strong id="header-dir" class="text-slate-300">/Downloads/YibYib_Media</strong>
+            </span>
+          </div>
+          <div class="flex items-center gap-4 text-xs">
+            <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              <span id="header-status" class="font-mono text-slate-300">Konkurensi: 2 Batch Aktif</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Views Viewport -->
+        <div class="flex-1 overflow-y-auto p-8 relative">
+
+          <!-- 1. UNDUH VIEW -->
+          <section id="view-unduh" class="space-y-6">
+
+            <!-- Paste & Config Section -->
+            <div class="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80 space-y-5">
+              
+              <!-- Input Selector Modes -->
+              <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <div class="flex gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                  <button id="mode-single" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow cursor-pointer">
+                    Tautan Tunggal / Playlist
+                  </button>
+                  <button id="mode-bulk" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+                    Unggah Massal (Bulk)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Single Link Container -->
+              <div id="container-single" class="flex flex-col sm:flex-row gap-3">
+                <div class="flex-1 relative">
+                  <input id="input-url" type="text" placeholder="Masukkan tautan video tunggal atau playlist (YouTube, TikTok, Instagram...)" class="w-full pl-4 pr-24 py-3 bg-slate-950/80 hover:bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-200" />
+                  <button id="btn-paste" class="absolute right-2 top-2 px-3 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 rounded-lg text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer">
+                    <span class="font-mono text-[10px]">Tempel</span>
+                  </button>
+                </div>
+                <div class="flex gap-2 flex-shrink-0">
+                  <button id="btn-cek-link" class="px-4 py-3 bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-200 font-semibold rounded-xl text-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-150">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                    <span>Cek Link</span>
+                  </button>
+                  <button id="btn-unduh" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 cursor-pointer transition-all duration-150">
+                    <span>Unduh</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Bulk Link Container (Hidden by default) -->
+              <div id="container-bulk" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Drag and Drop Text Box -->
+                  <div id="drop-zone" class="border-2 border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/30 hover:bg-slate-950/50 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-150">
+                    <input type="file" id="bulk-file-input" class="hidden" accept=".txt" />
+                    <svg class="w-8 h-8 text-blue-400 mb-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+                    </svg>
+                    <p class="text-xs font-bold text-slate-200">Klik / Seret berkas .txt di sini</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Satu baris berisi satu tautan video/audio</p>
+                  </div>
+                  <!-- Bulk manual links textarea input -->
+                  <div class="flex flex-col">
+                    <textarea id="bulk-text" placeholder="Atau tempel beberapa tautan di sini secara manual (satu baris = satu tautan):&#10;https://www.youtube.com/watch?v=123&#10;https://www.youtube.com/watch?v=456" class="w-full flex-1 p-3 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-xs text-slate-100 placeholder-slate-600 focus:outline-none min-h-[115px] font-mono resize-none"></textarea>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span id="bulk-counter" class="text-[10px] text-slate-500 font-mono">0 Tautan terdeteksi</span>
+                  <button id="btn-bulk-unduh" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all">
+                    <span>Masukkan Semua Ke Antrean</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Media Format Options -->
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-3 border-t border-slate-800/50">
+                <div class="md:col-span-5 flex gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                  <button id="media-mode-video" class="flex-1 py-1.5 rounded-md text-xs font-bold transition-all bg-blue-600 text-white cursor-pointer">
+                    Video (MP4 / WebM)
+                  </button>
+                  <button id="media-mode-audio" class="flex-1 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+                    Audio MP3 / M4A / WAV
+                  </button>
+                </div>
+
+                <!-- Video Res dropdown -->
+                <div class="md:col-span-4" id="quality-selector-container">
+                  <select id="select-video-res" class="w-full px-3 py-2 bg-slate-950 border border-slate-850 focus:border-blue-500 rounded-lg text-xs text-slate-200 focus:outline-none cursor-pointer">
+                    <option value="1080p">1080p (Full HD - Rekomendasi)</option>
+                    <option value="720p">720p (HD - Hemat Storage)</option>
+                    <option value="2160p">2160p (4K UHD Ultra)</option>
+                    <option value="1440p">1440p (2K QHD)</option>
+                    <option value="480p">480p (SD - Medium)</option>
+                    <option value="360p">360p (SD - Low Data)</option>
+                  </select>
+                </div>
+
+                <!-- Format Extension dropdown -->
+                <div class="md:col-span-3">
+                  <select id="select-file-type" class="w-full px-3 py-2 bg-slate-950 border border-slate-850 focus:border-blue-500 rounded-lg text-xs text-slate-200 focus:outline-none cursor-pointer">
+                    <!-- Options populated dynamically based on media-mode -->
+                    <option value="mp4">Format: MP4 Container</option>
+                    <option value="webm">Format: WebM Video</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Notification Alerts inside Download -->
+            <div id="unduh-alert" class="hidden p-3 rounded-xl text-xs flex items-center gap-2.5 transition-all animate-slideIn"></div>
+
+            <!-- 1.1 LINK CHECKED PLAYLIST RESULT PREVIEW -->
+            <div id="playlist-preview-box" class="hidden p-5 bg-slate-900/60 rounded-2xl border border-blue-500/20 space-y-4 animate-slideIn">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[9px] uppercase font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 font-mono">
+                    YT-DLP CLI: Playlist Terbaca
+                  </span>
+                  <h3 id="playlist-title" class="text-sm font-bold text-slate-100 mt-1">Tutorial Pemrograman JavaScript Dasar</h3>
+                  <p id="playlist-subtitle" class="text-[11px] text-slate-400 font-mono mt-0.5">Mengekstrak 5 video • Mode Sequential Queue diaktifkan</p>
+                </div>
+                <button id="btn-close-playlist" class="text-slate-500 hover:text-slate-300 p-1 rounded-full hover:bg-slate-900 cursor-pointer">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+
+              <!-- Track Checklist Listing container -->
+              <div id="playlist-tracks" class="space-y-1.5 max-h-40 overflow-y-auto pr-2 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+                <!-- Tracks inserted dynamically -->
+              </div>
+
+              <div class="flex justify-between items-center pt-1">
+                <span id="playlist-track-selection-count" class="text-[10px] text-slate-500 font-mono">5 Trek terpilih</span>
+                <div class="flex gap-2">
+                  <button id="btn-playlist-batal" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 text-slate-300 rounded-lg text-xs font-semibold cursor-pointer">
+                    Batal
+                  </button>
+                  <button id="btn-playlist-unduh-semua" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md">
+                    <span>Unduh Playlist Terpilih (Berurutan)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 1.2 LINK CHECKED SINGLE VIDEO PREVIEW -->
+            <div id="video-preview-box" class="hidden p-4 bg-slate-900/60 rounded-2xl border border-blue-500/20 flex gap-4 animate-slideIn">
+              <img id="video-preview-img" class="w-28 h-20 object-cover rounded-xl border border-slate-800 flex-shrink-0" src="" alt="Thumbnail" />
+              <div class="flex-1 min-w-0">
+                <span class="text-[9px] uppercase font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">Single Video Terverifikasi</span>
+                <h3 id="video-preview-title" class="text-sm font-bold text-slate-100 mt-1 truncate">Belajar Pemrograman JS</h3>
+                <p id="video-preview-channel" class="text-xs text-slate-400 mt-0.5">Edukasi Channel</p>
+                <p id="video-preview-duration" class="text-[10px] text-slate-500 font-mono mt-1">Durasi: --:--</p>
+              </div>
+              <button id="btn-close-video-preview" class="text-slate-500 hover:text-slate-300 self-start p-1 rounded-full hover:bg-slate-900 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <!-- Added Alert For Successful Queueing -->
+            <div id="queue-success-tip" class="hidden p-4 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center gap-3 animate-slideIn text-xs">
+              <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
+              <span class="text-blue-300 font-semibold flex-1">Media ditambahkan ke antrean! Periksa tab <strong class="text-white cursor-pointer hover:underline" id="btn-go-to-queue">Antrean Unduh</strong> di sidebar untuk memantau progress.</span>
+            </div>
+
+          </section>
+
+
+          <!-- 1.1 ANTREAN VIEW (Hidden initially) -->
+          <section id="view-antrean" class="hidden space-y-6 animate-fadeIn">
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h2 class="text-lg font-extrabold text-white">Antrean Unduh Aktif</h2>
+                <span id="queue-count-badge" class="bg-blue-600/10 border border-blue-500/10 text-blue-400 text-xs px-3 py-1 rounded-full font-bold font-mono">0 Item</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1.5">Sistem memproses antrean secara berurutan sesuai batas maksimum batch yang diaktifkan.</p>
+            </div>
+
+            <!-- Download Queue Progress Area -->
+            <div class="space-y-4">
+
+              <!-- Queue Status Filter & Sorting Bar -->
+              <div class="flex flex-col md:flex-row gap-3 justify-between items-start md:items-center bg-[#0c1222]/80 p-4 rounded-xl border border-slate-800/60">
+                <div class="flex items-center gap-1.5 flex-wrap" id="queue-filters-container">
+                  <button id="filter-queue-all" data-filter="all" class="queue-filter-btn px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    Semua
+                  </button>
+                  <button id="filter-queue-downloading" data-filter="downloading" class="queue-filter-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    Mengunduh
+                  </button>
+                  <button id="filter-queue-queued" data-filter="queued" class="queue-filter-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    Antre
+                  </button>
+                  <button id="filter-queue-paused" data-filter="paused" class="queue-filter-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    Ditangguhkan
+                  </button>
+                  <button id="filter-queue-failed" data-filter="failed" class="queue-filter-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    Gagal
+                  </button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <label class="text-xs text-slate-400 font-mono">Urutan:</label>
+                  <select id="sort-queue" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none cursor-pointer font-mono">
+                    <option value="newest">Terbaru Ditambahkan</option>
+                    <option value="title">Abjad Judul (A-Z)</option>
+                    <option value="progress">Kemajuan Terbesar</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Select All & Bulk Selection Actions -->
+              <div id="queue-selection-bar" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/40 px-4 py-3 rounded-xl border border-slate-800/60 text-xs">
+                <div class="flex items-center gap-2.5">
+                  <input type="checkbox" id="queue-select-all" class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900 cursor-pointer" />
+                  <label for="queue-select-all" class="font-bold text-slate-300 cursor-pointer select-none">Pilih Semua Item Terlihat</label>
+                  <span id="queue-selected-count" class="hidden text-blue-400 font-mono font-bold px-2.5 py-0.5 bg-blue-500/10 border border-blue-500/10 rounded">0 Terpilih</span>
+                </div>
+                <div id="queue-bulk-actions" class="hidden flex items-center gap-2">
+                  <span class="text-slate-500 text-[10px] font-bold uppercase tracking-wider mr-1">Aksi Massal:</span>
+                  <button id="btn-bulk-pause" class="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500 hover:text-black border border-amber-500/10 text-amber-400 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1 text-[11px]">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/></svg>
+                    <span>Tangguhkan</span>
+                  </button>
+                  <button id="btn-bulk-resume" class="px-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-500 hover:text-white border border-blue-500/10 text-blue-400 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1 text-[11px]">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/></svg>
+                    <span>Lanjutkan</span>
+                  </button>
+                  <button id="btn-bulk-cancel" class="px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/10 text-rose-400 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1 text-[11px]">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <span>Hapus</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- List container for downloading items -->
+              <div id="downloads-list" class="space-y-3">
+                <!-- Empty State -->
+                <div id="downloads-empty" class="p-12 border border-dashed border-slate-850 rounded-2xl text-center text-slate-500 text-xs bg-slate-900/10">
+                  <svg class="w-8 h-8 text-slate-600 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                  <span>Tidak ada media dalam antrean proses saat ini.</span>
+                  <p class="text-[10px] text-slate-600 mt-1">Gunakan tab "Unduh Media" untuk memvalidasi dan menambahkan tautan baru.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- 2. RIWAYAT VIEW (Hidden initially) -->
+          <section id="view-riwayat" class="hidden space-y-6 animate-fadeIn">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-extrabold text-white">Berkas Tersimpan</h2>
+                <p class="text-xs text-slate-400">Daftar unduhan yang berhasil diselesaikan dan disimpan di direktori lokal Anda.</p>
+              </div>
+              <button id="btn-clear-history" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg text-xs font-bold border border-rose-500/10 cursor-pointer transition-colors flex items-center gap-1">
+                <span>Bersihkan Riwayat</span>
+              </button>
+            </div>
+
+            <!-- Search / Filter Riwayat -->
+            <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800/80 flex gap-3">
+              <input id="history-search" type="text" placeholder="Cari nama berkas di riwayat..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono" />
+              <select id="history-filter" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none cursor-pointer">
+                <option value="all">Semua Format</option>
+                <option value="video">Format Video</option>
+                <option value="audio">Format Audio</option>
+              </select>
+            </div>
+
+            <!-- History List dynamic container -->
+            <div id="history-list-container" class="space-y-3">
+              <!-- Empty state -->
+              <div id="history-empty" class="p-8 border border-dashed border-slate-800 rounded-2xl text-center text-slate-500 text-xs">
+                Belum ada media yang selesai diunduh.
+              </div>
+            </div>
+          </section>
+
+
+          <!-- 2.5 AUDIO CONVERTER VIEW (Hidden initially) -->
+          <section id="view-convert" class="hidden space-y-6 animate-fadeIn">
+            <div>
+              <h2 class="text-lg font-extrabold text-white">Konverter Video ke Audio</h2>
+              <p class="text-xs text-slate-400">Ekstrak lagu, musik, atau vokal dari berkas video mp4/webm menjadi format audio MP3 berkualitas tinggi atau WAV Lossless.</p>
+            </div>
+
+            <!-- Main Converter Navigation Tabs -->
+            <div class="flex border-b border-slate-800/80">
+              <button id="btn-conv-tab-history" class="px-5 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-500 cursor-pointer transition-all">
+                Dari Riwayat Unduhan
+              </button>
+              <button id="btn-conv-tab-upload" class="px-5 py-3 text-xs font-bold text-slate-400 hover:text-white border-b-2 border-transparent cursor-pointer transition-all">
+                Unggah Berkas Video Mandiri
+              </button>
+            </div>
+
+            <!-- PANEL 1: CONVERT FROM DOWNLOADED VIDEOS -->
+            <div id="panel-conv-history" class="space-y-4">
+              <!-- Search & Bitrate Control -->
+              <div class="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/80 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+                <div class="flex-1 relative">
+                  <input id="conv-history-search" type="text" placeholder="Cari video untuk dikonversi..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono" />
+                </div>
+                <div class="flex items-center gap-3 flex-wrap">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400">Kualitas Audio:</span>
+                    <select id="conv-history-bitrate" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none cursor-pointer">
+                      <option value="320kbps">MP3 - 320 kbps (Super HQ)</option>
+                      <option value="256kbps">MP3 - 256 kbps (High)</option>
+                      <option value="192kbps">MP3 - 192 kbps (Medium)</option>
+                      <option value="128kbps">MP3 - 128 kbps (Hemat)</option>
+                      <option value="wav-lossless">WAV Lossless (Studio)</option>
+                    </select>
+                  </div>
+                  <button id="btn-start-history-conv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-blue-500/10">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3M3 12a48.884 48.884 0 011.312-7.013M3 12l-3 3m3-3l3 3M3 12c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M19.5 12a48.884 48.884 0 01-1.312 7.013M19.5 12l3 3m-3-3l-3 3"/></svg>
+                    <span>Mulai Konversi</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- List with Selection Controls -->
+              <div class="bg-slate-900/20 border border-slate-850 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-800/60 pb-3 text-xs">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="conv-select-all-history" class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+                    <label for="conv-select-all-history" class="font-bold text-slate-300 cursor-pointer select-none">Pilih Semua Video</label>
+                  </div>
+                  <span id="conv-history-selected-count" class="text-[10px] text-blue-400 font-mono font-bold px-2 py-0.5 bg-blue-500/10 border border-blue-500/10 rounded">0 Terpilih</span>
+                </div>
+
+                <!-- Video items from history scrollable box -->
+                <div id="conv-history-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                  <!-- Empty fallback -->
+                  <div class="text-center p-8 text-slate-500 text-xs">
+                    Tidak ada video di riwayat. Silakan unduh video terlebih dahulu di tab "Unduh Media".
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL 2: CONVERT FROM DIRECT FILE UPLOAD -->
+            <div id="panel-conv-upload" class="hidden space-y-4">
+              <!-- Drag and drop upload zone -->
+              <div id="conv-upload-zone" class="p-8 border-2 border-dashed border-slate-800 hover:border-blue-500/50 rounded-2xl text-center bg-slate-900/10 hover:bg-slate-900/20 cursor-pointer transition-all space-y-3">
+                <input type="file" id="conv-file-input" multiple accept="video/*" class="hidden" />
+                <svg class="w-10 h-10 text-slate-500 mx-auto animate-bounce" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/></svg>
+                <div class="space-y-1">
+                  <span class="text-xs font-bold text-slate-300 block">Tarik & Lepas file video lokal di sini</span>
+                  <span class="text-[10px] text-slate-500 block font-mono">Mendukung MP4, MKV, AVI, WEBM, dll.</span>
+                </div>
+              </div>
+
+              <!-- Upload files selected list -->
+              <div id="conv-uploaded-files-container" class="hidden bg-[#0c1222]/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800/60 pb-3">
+                  <span class="text-xs font-bold text-slate-200">Berkas Terpilih Untuk Diunggah</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400">Kualitas Audio:</span>
+                    <select id="conv-upload-bitrate" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none cursor-pointer">
+                      <option value="320kbps">320 kbps (Super HQ)</option>
+                      <option value="256kbps">256 kbps (High)</option>
+                      <option value="192kbps">192 kbps (Medium)</option>
+                      <option value="wav-lossless">WAV Lossless</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div id="conv-uploaded-files-list" class="space-y-2"></div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                  <button id="btn-clear-upload-list" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 rounded-lg text-xs font-bold cursor-pointer transition-colors">
+                    Hapus Daftar
+                  </button>
+                  <button id="btn-start-upload-conv" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-extrabold flex items-center gap-1.5 cursor-pointer shadow-lg shadow-blue-500/10">
+                    <span>Mulai Unggah & Konversi</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- REAL-TIME CONVERSIONS PROGRESS MONITOR -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800/40 pb-2">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                  Status & Aktivitas Konversi
+                </h3>
+                <button id="btn-clear-conv-jobs" class="text-[10px] text-slate-500 hover:text-rose-400 font-mono flex items-center gap-1 transition-colors cursor-pointer">
+                  Bersihkan Log Konversi
+                </button>
+              </div>
+
+              <div id="convert-jobs-list" class="space-y-2.5">
+                <!-- Empty state conversion log -->
+                <div id="conv-jobs-empty" class="p-6 border border-dashed border-slate-850 rounded-2xl text-center text-slate-600 text-[11px] bg-slate-900/10">
+                  Tidak ada proses konversi yang sedang berjalan atau riwayat baru.
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+
+          <!-- 3. TERMINAL LOGS VIEW (Hidden initially) -->
+          <section id="view-logs" class="hidden space-y-6 animate-fadeIn">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+                  <span>CLI Terminal Outputs</span>
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </h2>
+                <p class="text-xs text-slate-400">Stream logging langsung dari pipa stdout eksekusi yt-dlp dan ffmpeg Rust backend.</p>
+              </div>
+              <button id="btn-clear-logs" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 rounded-lg text-xs font-semibold cursor-pointer transition-colors">
+                Hapus Terminal
+              </button>
+            </div>
+
+            <!-- Terminal Window -->
+            <div class="bg-black/90 rounded-2xl border border-slate-800 p-5 font-mono text-[11px] text-slate-300 flex flex-col h-[420px] shadow-2xl relative overflow-hidden">
+              <div class="flex items-center gap-2 border-b border-slate-800/60 pb-3 mb-3 text-slate-500">
+                <span class="w-3 h-3 rounded-full bg-rose-500/20"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/20"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/20"></span>
+                <span class="ml-2 text-[10px] tracking-wider uppercase font-semibold text-slate-600">bash - tauri_ytdlp_engine.log</span>
+              </div>
+              <div id="terminal-content" class="flex-1 overflow-y-auto space-y-1.5 scroll-smooth pr-2 custom-scrollbar">
+                <p class="text-slate-500">[tauri::system] Memulai Core Engine Downloader...</p>
+                <p class="text-slate-500">[tauri::system] Melakukan pemindaian direktori path binaries...</p>
+                <p class="text-emerald-400 font-bold">[system] Binari yt-dlp terdeteksi pada /usr/local/bin/yt-dlp</p>
+                <p class="text-emerald-400 font-bold">[system] Binari ffmpeg terdeteksi pada /usr/local/bin/ffmpeg</p>
+                <p class="text-slate-300">[tauri] Aplikasi siap digunakan. Menunggu tautan dari frontend.</p>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- 4. PENGATURAN VIEW (Hidden initially) -->
+          <section id="view-settings" class="hidden space-y-6 animate-fadeIn">
+            <div>
+              <h2 class="text-lg font-extrabold text-white">Pengaturan Aplikasi</h2>
+              <p class="text-xs text-slate-400">Kustomisasi perilaku mesin pengunduh, pembatasan batch, dan direktori penyimpanan berkas.</p>
+            </div>
+
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl divide-y divide-slate-800/60">
+              
+              <!-- Batch Concurrency Limit -->
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wide">Batas Konkurensi Batch (Multi-thread)</h3>
+                  <p class="text-xs text-slate-400">Berapa banyak video dalam playlist yang diunduh bersamaan secara simultan. Sisanya akan antre di bawahnya.</p>
+                </div>
+                <div class="w-44">
+                  <select id="setting-batch-limit" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-lg text-xs text-slate-200 focus:outline-none cursor-pointer">
+                    <option value="1">1 Batch (Satu per satu)</option>
+                    <option value="2" selected>2 Batch (Direkomendasikan)</option>
+                    <option value="3">3 Batch (Lebih Cepat)</option>
+                    <option value="4">4 Batch (CPU Tinggi)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Storage Location path -->
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wide">Direktori Penyimpanan</h3>
+                  <p class="text-xs text-slate-400">Lokasi penyimpanan fisik hasil transcoding video/audio di sistem operasi Anda.</p>
+                </div>
+                <div class="flex-1 max-w-md flex gap-2">
+                  <input id="setting-download-dir" type="text" value="/Downloads/YibYib_Media" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono" />
+                  <button id="btn-browse-dir" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold cursor-pointer">
+                    Telusuri
+                  </button>
+                </div>
+              </div>
+
+              <!-- Default Formats settings -->
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wide">Kualitas Video Default</h3>
+                  <p class="text-xs text-slate-400">Resolusi default saat menambahkan URL video baru.</p>
+                </div>
+                <div class="w-44">
+                  <select id="setting-default-res" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-lg text-xs text-slate-200 focus:outline-none cursor-pointer">
+                    <option value="360p">360p (SD - Low Data)</option>
+                    <option value="480p">480p (SD - Medium)</option>
+                    <option value="720p">720p (HD - Hemat)</option>
+                    <option value="1080p" selected>1080p (Full HD)</option>
+                    <option value="1440p">1440p (2K QHD)</option>
+                    <option value="2160p">2160p (4K UHD)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wide">Kualitas Audio Default</h3>
+                  <p class="text-xs text-slate-400">Bitrate default saat mengekstrak audio menjadi berkas musik.</p>
+                </div>
+                <div class="w-44">
+                  <select id="setting-default-bitrate" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-lg text-xs text-slate-200 focus:outline-none cursor-pointer">
+                    <option value="128kbps">128 kbps (Hemat Data)</option>
+                    <option value="192kbps">192 kbps (Medium AAC)</option>
+                    <option value="256kbps">256 kbps (High Quality)</option>
+                    <option value="320kbps" selected>320 kbps (Super HQ MP3)</option>
+                    <option value="wav-lossless">WAV Lossless (Studio)</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+        <!-- 5. FLOATING DYNAMIC MEDIA PLAYER OVERLAY -->
+        <div id="media-player-overlay" class="hidden absolute bottom-6 right-6 w-96 bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-2xl z-30 animate-slideIn">
+          <div class="flex items-center justify-between border-b border-slate-800/60 pb-2 mb-3">
+            <span class="text-[10px] text-blue-400 font-mono font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
+              Memutar Berkas Lokal
+            </span>
+            <button id="btn-close-player" class="text-slate-500 hover:text-slate-300 p-1 rounded-full hover:bg-slate-800 cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="w-16 h-16 bg-blue-900/10 rounded-xl flex items-center justify-center border border-blue-500/10 text-blue-400 flex-shrink-0 relative overflow-hidden">
+              <svg class="w-8 h-8 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0 flex flex-col justify-center">
+              <h4 id="player-title" class="text-xs font-bold text-white truncate">Ambient Cinematic Lo-Fi Soundscapes</h4>
+              <p id="player-meta" class="text-[10px] text-slate-400 mt-0.5 font-mono">Audio • MP3 • 320 kbps</p>
+              
+              <!-- Progress timeline bar -->
+              <div class="mt-2.5 h-1 bg-slate-800 rounded-full relative overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-2/5 bg-blue-500"></div>
+              </div>
+              <div class="flex justify-between items-center text-[9px] text-slate-500 font-mono mt-1">
+                <span>01:45</span>
+                <span>04:12</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Float Toasts list container -->
+        <div id="toasts-container" class="absolute bottom-6 left-6 z-40 space-y-2 pointer-events-none"></div>
+
+      </main>
+
+    </div>
+
+    <!-- Script Entry -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema-capability.json",
+  "identifier": "default",
+  "description": "Default permissions for YibYib Downloader & Audio Converter",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "shell:allow-spawn",
+    "shell:allow-execute",
+    "dialog:all",
+    "fs:allow-read",
+    "fs:allow-write"
+  ]
+}

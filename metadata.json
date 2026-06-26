@@ -1,0 +1,6 @@
+{
+  "name": "YibYib Downloader Tauri v2",
+  "description": "Tauri v2 desktop client mockup with Rust backend integration supporting sequential batch download scheduler, yt-dlp metadata link checking, ffmpeg audio conversion, bulk links upload, history logs, and terminal log viewers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,17 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Tauri & Rust build artifacts
+src-tauri/target/
+
+# Local database and downloads
+*.db
+*.db-journal
+downloads/
+bin/
